@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: backend
+      deployment: uqcs
+  template: 
+    metadata:
+      labels:
+        app: backend
+        deployment: uqcs
+    spec:
+      containers:
+      - name: backend
+        imagePullPolicy: Always
+        image: gcr.io/cluster-171711/uqcs-backend:latest
+        readinessProbe:
+          exec:
+            command: ["/root/grpc_health_probe", "-addr=:10000"]
+          initialDelaySeconds: 5
+        livenessProbe:
+          exec:
+            command: ["/root/grpc_health_probe", "-addr=:10000"]
+          initialDelaySeconds: 10
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "50m"
+        ports:
+          - containerPort: 10000
+            name: grpc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-grpc
+  labels:
+    name: backend-grpc
+spec:
+  ports:
+    - name: backend-grpc
+      port: 10000
+      targetPort: grpc
+  selector:
+    app: backend

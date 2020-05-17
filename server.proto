@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+option go_package = "github.com/davefinster/uqcs-demo/backend/api";
+
+message Attachment {
+	string id = 1;
+	string file_name = 2;
+	string mime_type = 3;
+}
+
+message Event {
+	string id = 1;
+	string title = 2;
+	string description = 3;
+	repeated Attachment attachments = 4;
+}
+
+message GetEventsRequest {
+	string title_query = 1;
+  int32 page_number = 2;
+  int32 result_per_page = 3;
+}
+
+message GetEventsResponse {
+	repeated Event events = 1;
+}
+
+message CreateEventRequest {
+	Event event = 1;
+}
+
+message CreateEventResponse {
+	Event event = 1;
+}
+
+service EventBackend {
+	rpc GetEvents (GetEventsRequest) returns (GetEventsResponse) {}
+	rpc CreateEvent (CreateEventRequest) returns (CreateEventResponse) {}
+}
