@@ -17,4 +17,4 @@ jobs:
         export_default_credentials: true
     - run: gcloud info && gcloud auth configure-docker
     - name: Build the Base Docker image
-      run: docker build . --file Dockerfile --tag gcr.io/cluster-171711/uqcs-backend:{{github.sha}} --tag gcr.io/cluster-171711/uqcs-backend:latest && docker push gcr.io/cluster-171711/uqcs-backend:{{github.sha}} && docker push gcr.io/cluster-171711/uqcs-backend:latest
+      run: docker build . --file Dockerfile --tag gcr.io/cluster-171711/uqcs-backend:${{ github.sha }} --tag gcr.io/cluster-171711/uqcs-backend:latest && docker push gcr.io/cluster-171711/uqcs-backend:${{ github.sha }} && docker push gcr.io/cluster-171711/uqcs-backend:latest
