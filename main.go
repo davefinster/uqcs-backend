@@ -130,7 +130,7 @@ func main() {
 	grpcServer := grpc.NewServer(grpc.StatsHandler(&ocgrpc.ServerHandler{}))
 	var s *store.Postgres
 	for i := 0; i < 10; i++ {
-		log.Printf("Attempting to connect to Postgres - Attempt %d", i)
+		log.Printf("Attempting to connect to Postgres - Attempt %d\n", i)
 		store, err := store.NewPostgres(os.Getenv("CONNECTION_PARAMS"))
 		if err != nil {
 			time.Sleep(10 * time.Second)
