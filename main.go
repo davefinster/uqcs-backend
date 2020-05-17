@@ -128,9 +128,19 @@ func main() {
 
 	healthServer := health.NewServer()
 	grpcServer := grpc.NewServer(grpc.StatsHandler(&ocgrpc.ServerHandler{}))
-	s, err := store.NewPostgres(os.Getenv("CONNECTION_PARAMS"))
-	if err != nil {
-		log.Fatalf("failed to setup store: %v", err)
+	var s *store.Postgres
+	for i := 0; i < 10; i++ {
+		log.Printf("Attempting to connect to Postgres - Attempt %d", i)
+		store, err := store.NewPostgres(os.Getenv("CONNECTION_PARAMS"))
+		if err != nil {
+			time.Sleep(10 * time.Second)
+		} else {
+			s = store
+			break
+		}
+	}
+	if s == nil {
+		log.Fatalf("failed to setup store - last error: %v", err)
 	}
 	lg := loggingClient.Logger("backend")
 	healthpb.RegisterHealthServer(grpcServer, healthServer)
