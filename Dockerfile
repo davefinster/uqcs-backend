@@ -10,7 +10,7 @@ WORKDIR /root/
 COPY --from=0 /root/project/backend .
 COPY --from=0 /root/project/migrate ./migrate
 RUN apt-get update && \
-    apt-get install --fix-missing -y curl && \
+    apt-get install --fix-missing -y ca-certificates curl && \
 		curl -L -O https://github.com/grpc-ecosystem/grpc-health-probe/releases/download/v0.3.2/grpc_health_probe-linux-amd64 && \
 		mv grpc_health_probe-linux-amd64 grpc_health_probe && \
 		chmod +x grpc_health_probe && \
