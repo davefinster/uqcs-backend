@@ -101,7 +101,7 @@ func (p *Postgres) FetchEvents(ctx context.Context, filter *EventFilter) ([]*api
 func (p *Postgres) CreateEvent(ctx context.Context, event *api.Event) (*api.Event, error) {
 	ctx, span := trace.StartSpan(ctx, "uqcs.backend.postgres.CreateEvent")
 	defer span.End()
-	sql, args, err := p.sq.Insert(eventsTable).Columns("title", "description").Values(event.GetTitle, sql.NullString{
+	sql, args, err := p.sq.Insert(eventsTable).Columns("title", "description").Values(event.GetTitle(), sql.NullString{
 		String: event.GetDescription(),
 		Valid:  len(event.GetDescription()) > 0,
 	}).Suffix("RETURNING \"id\"").ToSql()
